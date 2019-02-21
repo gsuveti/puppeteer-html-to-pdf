@@ -19,6 +19,6 @@
   },
   "noAnalyze": true,
   "engines": {
-    "node": "~0.10.0 || ~4.2.0"
+    "node": "8.9.4"
   }
 }
