@@ -1,6 +1,6 @@
 var express = require('express')
+var puppeteer = require('puppeteer')
 var router = express.Router()
-const puppeteer = require('puppeteer')
 
 router.get('/', function (req, res, next) {
   (async () => {
