@@ -22,13 +22,12 @@ router.post('/', function (req, res, next) {
 })
 
 async function generatePdfFromUrl (url) {
-  const browser = await puppeteer.launch({headless: true}) // Puppeteer can only generate pdf in headless mode.
+  const browser = await launchPuppeteer()
   const page = await browser.newPage()
 
   await page.goto(url, {waitUntil: 'networkidle0'})
 
   const pdfConfig = {
-    path: 'url.pdf', // Saves pdf to disk.
     format: 'A4',
     printBackground: true,
     margin: { // Word's default A4 margins
@@ -46,7 +45,7 @@ async function generatePdfFromUrl (url) {
 }
 
 async function generatePdfFromUrlAndContent (url, content) {
-  const browser = await puppeteer.launch({headless: true}) // Puppeteer can only generate pdf in headless mode.
+  const browser = await launchPuppeteer()
   const page = await browser.newPage()
   if (url) {
     await page.goto(url, {waitUntil: 'networkidle0'})
@@ -59,7 +58,6 @@ async function generatePdfFromUrlAndContent (url, content) {
   }, content)
 
   const pdfConfig = {
-    path: 'url.pdf', // Saves pdf to disk.
     format: 'A4',
     printBackground: true,
     margin: { // Word's default A4 margins
@@ -74,6 +72,16 @@ async function generatePdfFromUrlAndContent (url, content) {
 
   await browser.close()
   return pdf
+}
+
+async function launchPuppeteer () {
+  const browser = await puppeteer.launch(
+    {
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+      headless: true,
+    }
+  ) // Puppeteer can only generate pdf in headless mode.
+  return browser
 }
 
 module.exports = router
