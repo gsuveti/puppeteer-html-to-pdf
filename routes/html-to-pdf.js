@@ -28,13 +28,13 @@ async function generatePdfFromUrl (url) {
   await page.goto(url, {waitUntil: 'networkidle0'})
 
   const pdfConfig = {
-    format: 'A4',
+    format: 'A3',
     printBackground: true,
     margin: { // Word's default A4 margins
-      top: '2.54cm',
-      bottom: '2.54cm',
-      left: '2.54cm',
-      right: '2.54cm'
+      top: '0',
+      bottom: '0',
+      left: '0',
+      right: '0'
     }
   }
   await page.emulateMedia('screen')
@@ -48,7 +48,17 @@ async function generatePdfFromUrlAndContent (url, content) {
   const browser = await launchPuppeteer()
   const page = await browser.newPage()
   if (url) {
+    page.setRequestInterception(true);
+    page.on('request', (request) => {
+      if (['script'].indexOf(request.resourceType()) !== -1) {
+        request.abort();
+      } else {
+        request.continue();
+      }
+    });
+
     await page.goto(url, {waitUntil: 'networkidle0'})
+
   } else {
     await page.goto(`data:text/html,<!DOCTYPE html><html><body></body></html>`, {waitUntil: 'networkidle0'})
   }
@@ -58,13 +68,13 @@ async function generatePdfFromUrlAndContent (url, content) {
   }, content)
 
   const pdfConfig = {
-    format: 'A4',
-    printBackground: true,
+    format: 'A3',
+    printBackground: false,
     margin: { // Word's default A4 margins
-      top: '2.54cm',
-      bottom: '2.54cm',
-      left: '2.54cm',
-      right: '2.54cm'
+      top: '1cm',
+      bottom: '1cm',
+      left: '0cm',
+      right: '0cm'
     }
   }
   await page.emulateMedia('screen')
