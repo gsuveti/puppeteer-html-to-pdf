@@ -22,7 +22,7 @@ app.use(express.urlencoded({extended: false}))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 app.use(cors())
-app.use(bodyParser.text({type: 'text/html'}))
+app.use(bodyParser.text({type: 'text/html', limit:'50mb'}))
 
 app.use('/', indexRouter)
 app.use('/users', usersRouter)
